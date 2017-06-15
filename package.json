@@ -1,17 +1,17 @@
 {
-  "name": "bitcoin-rpc",
-  "description": "An RPC Client for Bitcoin Core",
+  "name": "pivx-rpc",
+  "description": "An RPC Client for Pivx Node",
   "version": "0.2.1",
   "main": "lib/index.js",
   "author": {
-    "name": "Chris Arnesen",
-    "email": "chris.arnesen@gmail.com"
+    "name": "Agustin Kassis",
+    "email": "agustin@coinmelon.com"
   },
-  "repository": "git://github.com/carnesen/bitcoin-rpc.git",
+  "repository": "git://github.com/agustinkassis/bitcoin-rpc.git",
   "bugs": {
-    "url": "https://github.com/carnesen/bitcoin-rpc/issues"
+    "url": "https://github.com/agustinkassis/pivx-rpc/issues"
   },
-  "homepage": "https://github.com/carnesen/bitcoin-rpc",
+  "homepage": "https://github.com/agustinkassis/bitcoin-rpc",
   "license": "MIT",
   "scripts": {
     "test": "gulp test"
