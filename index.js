@@ -1,9 +1,9 @@
 'use strict';
 
-var BitcoinRPC = {
+var PivxRPC = {
   Client: require('./server/client'),
   requests: require('./server/requests').create(),
   spec: require('./server/spec')
 };
 
-module.exports = BitcoinRPC;
+module.exports = PivxRPC;
