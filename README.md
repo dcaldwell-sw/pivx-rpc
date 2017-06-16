@@ -1,10 +1,6 @@
 pivx-rpc
 ================
 
-[![Build Status](https://travis-ci.org/agustinkassis/pivx-rpc.svg)](https://travis-ci.org/agustinkassis/pivx-rpc)
-
-[![Coverage Status](https://coveralls.io/repos/github/agustinkassis/pivx-rpc/badge.svg?branch=master)](https://coveralls.io/github/agustinkassis/pivx-rpc?branch=master)
-
 [![NPM](https://nodei.co/npm/pivx-rpc.png)](https://nodei.co/npm/pivx-rpc/)
 
 Examples
