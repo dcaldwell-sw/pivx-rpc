@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/agustinkassis/pivx-rpc/issues"
   },
-  "homepage": "https://github.com/agustinkassis/bitcoin-rpc",
+  "homepage": "https://github.com/agustinkassis/pivx-rpc",
   "license": "MIT",
   "scripts": {
     "test": "gulp test"
