@@ -1,0 +1,79 @@
+---
+
+group: Pivx
+
+text: Exclusive methods for PIVX network
+
+methods:
+
+  Masternode:
+    text: |
+      Set of commands to execute masternode related actions
+    params:
+      - name: command
+        text: (string or set of strings, required) The command to execute
+        example: status
+      - name: passphrase
+        text: (string, optional) The wallet passphrase
+
+  MasternodeList:
+    text: Get Masternodes list
+    params:
+      - name: mode
+        text: |
+          (string, optional/required to use filter, defaults = status) The mode to run list in
+        required: false
+        default:
+      - name: filter
+        text: |
+          (string, optional) Filter results. Partial match by IP by default in all modes,
+          additional matches in some modes are also available
+        required: false
+        default: 
+    result:
+      serverVersion: { alias: version }
+
+
+  mnBudget:
+    text: Vote or show current budgets
+    params:
+      - name: command
+        text: (string or set of strings, required) The command to execute
+        example: status
+      - name: passphrase
+        text: (string, optional) The wallet passphrase
+
+  mnBudgetVoteRaw:
+    text: Compile and relay a proposal vote with provided external signature instead of signing vote internally
+    params:
+      - name: masternode-tx-hash
+      - name: masternode-tx-index
+      - name: proposal-hash
+      - name: vote
+        text: yes|no
+      - name: time
+      - name: vote-sig
+
+  mnFinalBudget:
+    text: Vote or show current budgets
+    params:
+      - name: command
+      - name: passphrase
+
+  mnSync:
+    text: Returns the sync status or resets sync.
+    params:
+      - name: status
+        text: status|reset
+
+  Obfuscation:
+    text: Obfuscation address
+    params:
+      - name: pivxaddress
+      - name: amount
+
+  Spork:
+    text: Gets current spork settings
+    params:
+      - name: name
+      - name: value

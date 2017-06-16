@@ -13,6 +13,7 @@ var fileContents = [
   fs.readFileSync(__dirname + '/yml/Generating.yml'),
   fs.readFileSync(__dirname + '/yml/Mining.yml'),
   fs.readFileSync(__dirname + '/yml/Network.yml'),
+  fs.readFileSync(__dirname + '/yml/Pivx.yml'),
   fs.readFileSync(__dirname + '/yml/RawTransactions.yml'),
   fs.readFileSync(__dirname + '/yml/Util.yml'),
   fs.readFileSync(__dirname + '/yml/Wallet.yml')
