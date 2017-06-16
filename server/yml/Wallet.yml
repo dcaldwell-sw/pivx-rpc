@@ -19,12 +19,22 @@ methods:
       - name: keys
         text: Array of bitcoin addresses / hex-encoded public keys
         example:
-          - 16sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5
-          - 171sgjn4YtPu27adkKGrdDwzRTxnRkBfKV
+          - Xt4qk9uKvQYAonVGSZNXqxeDmtjaEWgfrs
+          - XoSoWQkpgLpppPoyyzbUFh1fq2RBvW6UK1
       - name: account
         text: Account to assign the address (null means default account)
         default: null
-    result: BitcoinAddress
+    result: PivxAddress
+
+  AutoCombineRewards:
+    text: |
+      Wallet will automatically monitor for any coins with value below the threshold amount,
+      and combine them if they reside with the same PIVX address
+      When autocombinerewards runs it will create a transaction, and therefore will be subject to transaction fees.
+    params:
+      - name: active
+        text: true|false
+      - name: threshold
 
   BackupWallet:
     params:
@@ -35,9 +45,28 @@ methods:
     result: None
     text: Safely copies wallet.dat to destination
 
+  Bip38Decrypt:
+    text: |
+      Decrypts and then imports password protected private key.
+    params:
+      - name: passphrase
+        text: (string, required) The passphrase you want the private key to be encrypted with
+      - name: encryptedkey
+        text: (string, required) The encrypted private key
+
+  Bip38Encrypt:
+    text: |
+      Encrypts a private key corresponding to 'pivxaddress'.
+    params:
+      - name: pivxaddress
+        text: (string, required) The pivx address for the private key (you must hold the key already)
+      - name: passphrase
+        text: (string, required) The passphrase you want the private key to be encrypted with
+    result: PrivateKey
+
   DumpPrivKey:
     text: |
-      Reveals the private key corresponding to BitcoinAddress
+      Reveals the private key corresponding to PivxAddress
       See also ImportPrivKey, which can be used with this output
     params:
       - name: bitcoinAddress
@@ -51,32 +80,16 @@ methods:
         example: /dev/null
     result: None
 
-  EncryptWallet:
-    text: |
-      Encrypts the wallet with 'passphrase'. This is for first time encryption.
-      After this, any calls that interact with private keys such as sending or signing
-      will require the passphrase to be set prior the making these calls.
-      Use the WalletPassphrase call for this, and then WalletLock call.
-      If the wallet is already encrypted, use the WalletPassphraseChange call.
-      Note that this will shutdown the server.
-    params:
-      - name: passphrase
-        text: |
-          The pass phrase to encrypt the wallet with.
-          It must be at least 1 character, but should be long.
-        example: foo123
-    result: None
-
   GetAccount:
     text: Returns the account associated with the given address.
     params:
-      - name: BitcoinAddress
+      - name: PivxAddress
         text: The bitcoin address for account lookup
-        example: 1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ
+        example: XwnLY9Tf7Zsef8gMGL2fhWA9ZmMjt4KPwg
     result: Account
 
   GetAccountAddress:
-    text: Returns the current Bitcoin address for receiving payments to this account.
+    text: Returns the current Pivx address for receiving payments to this account.
     params:
       - name: account
         text: |
@@ -84,7 +97,7 @@ methods:
           to represent the default account. The account does not need to exist.
           It and a new address will be created if there's no account with the given name.
         default: ""
-    result: BitcoinAddress
+    result: PivxAddress
 
   GetAddressesByAccount:
     params:
@@ -92,13 +105,13 @@ methods:
         example: test
         default: ""
     text: Returns the list of addresses for the given account.
-    result: [ BitcoinAddress ]
+    result: [ PivxAddress ]
 
   GetBalance:
     params:
       - name: account
         text: Use * for the entire wallet. It may be the default account using ""
-        default: ""
+        default: "*"
       - name: minconf
         default: 1
         text: Only include transactions confirmed at least this many times.
@@ -110,11 +123,11 @@ methods:
       If account is specified, returns the balance in the account.
       Note that the account  is not the same as leaving the parameter out.
       The server total may be different to the balance in the default  account.
-    result: BTC
+    result: PIVX
 
   GetNewAddress:
     text: |
-      Returns a new Bitcoin address for receiving payments.
+      Returns a new Pivx address for receiving payments.
       If account is specified (recommended), it is added to the address book,
       so payments received with the address will be credited to that account.
     params:
@@ -125,13 +138,13 @@ methods:
           the default account is used. It can also be set to the empty string to
           represent the default account. The account does not need to exist. It
           will be created if there is no account by the given name.
-    result: BitcoinAddress
+    result: PivxAddress
 
   GetRawChangeAddress:
     text: |
-      Returns a new Bitcoin address, for receiving change.
+      Returns a new Pivx address, for receiving change.
       This is for use with raw transactions, NOT normal use.
-    result: BitcoinAddress
+    result: PivxAddress
 
   GetReceivedByAccount:
     params:
@@ -140,17 +153,23 @@ methods:
       - name: minconf
         default: 1
     text: Returns the total amount received to address in the account specified
-    result: BTC
+    result: PIVX
 
   GetReceivedByAddress:
     params:
-      - name: BitcoinAddress
+      - name: PivxAddress
         example: mkRLiFtiEzuqaC7hDUNMwTniMTUhq9xpK7
       - name: nConfirmations
         text: Minimum number of confirmations required
         default: 1
-    text: Returns the total amount received by the given BitcoinAddress
-    result: BTC
+    text: Returns the total amount received by the given PivxAddress
+    result: PIVX
+
+  GetStakeSplitThreshold:
+    text: Returns the set split stake threshold
+
+  GetStakingStatus:
+    text: Returns an object containing various staking information.
 
   GetTransaction:
     text: Get detailed information about in-wallet transaction
@@ -161,7 +180,7 @@ methods:
         default: false
         text: Whether to include watchonly addresses in balance calculation and details
     result:
-      amountBTC:
+      amountPIVX:
       nConfirmations:
       blockHash:
       blockHeight:
@@ -174,19 +193,19 @@ methods:
           - account:
             address:
             category: { text: send or receive }
-            amountBTC:
+            amountPIVX:
             outputIndex: { alias: vout }
       hex:
 
   GetUnconfirmedBalance:
     text: Returns the server's total unconfirmed balance
-    result: BTC
+    result: PIVX
 
   GetWalletInfo:
     text: Returns an object containing various wallet state info.
     result:
       walletVersion:
-      balanceBTC:
+      balancePIVX:
       nTransaction: { alias: txcount, text: total number of transactions in the wallet }
       oldestKeyTime:
         text: the timestamp of the oldest pre-generated key in the key pool
@@ -204,7 +223,7 @@ methods:
       Note: This call can take minutes to complete if rescan is true.
     params:
       - name: address
-        text: Bitcoin address or script
+        text: Pivx address or script
         example: mkRLiFtiEzuqaC7hDUNMwTniMTUhq9xpK7
       - name: label
         default: ""
@@ -296,7 +315,7 @@ methods:
           default: true
         account:
           text: The account name of the receiving account
-        amountBTC:
+        amountPIVX:
           text: The total amount received by addresses with this account
         nConfirmations:
           text: The number of confirmations of the most recent transaction included
@@ -319,7 +338,7 @@ methods:
           default: true
         account:
           text: The account name of the receiving account
-        amountBTC:
+        amountPIVX:
           text: The total amount received by addresses with this account
         nConfirmations:
           text: The number of confirmations of the most recent transaction included
@@ -345,13 +364,13 @@ methods:
               Not present for move transactions (category = move).
           category:
             text: send (negative amounts) or receive (positive amounts)
-          amountBTC:
+          amountPIVX:
             text: |
               The amount in bitcoins. This is negative for the 'send' category,
               and for the 'move' category for moves outbound. It is positive for
               the 'receive' category, and for the 'move' category for inbound funds.
           outputIndex:
-          feeBTC:
+          feePIVX:
             default: null
             text: negative and only available for the 'send' category of transactions.
           nConfirmations:
@@ -421,14 +440,14 @@ methods:
       - name: addresses
         text: Array of bitcoin addresses to filter
         default: []
-        type: [ BitcoinAddress ]
+        type: [ PivxAddress ]
     result:
       - txId:
         outputIndex:
-        BitcoinAddress:
+        PivxAddress:
         account:
         scriptPubKey:
-        amountBTC:
+        amountPIVX:
         nConfirmations:
 
   LockUnspent:
@@ -477,6 +496,12 @@ methods:
         default: ""
     result: Boolean
 
+  Multisend:
+    text: |
+      Adds a new address to the MultiSend vector
+    params:
+      - name: command
+
   SendFrom:
     text: |
       Sent an amount from an account to a bitcoin address.
@@ -485,10 +510,10 @@ methods:
       - name: fromAccount
         text: The name of the account to send funds from. "" means default account
         example: ""
-      - name: toBitcoinAddress
+      - name: toPivxAddress
         text: The bitcoin address to send funds to.
         example: mkRLiFtiEzuqaC7hDUNMwTniMTUhq9xpK7
-      - name: amountBTC
+      - name: amountPIVX
         text: Transaction fee is added on top
         example: 0.1
       - name: minconf
@@ -517,7 +542,7 @@ methods:
         example: ""
       - name: amounts
         type: Object
-        text: An object with address:amountBTC as the key:value pairs
+        text: An object with address:amountPIVX as the key:value pairs
         example: { mjUq15ga1EwCXJUHs2QiYhhrxTansS3Rc7: 0.01 }
       - name: minconf
         default: 1
@@ -531,9 +556,24 @@ methods:
       Send an amount to a given address. The amount is interpreted as a
       floating point number (real) and is rounded to the nearest 0.00000001
     params:
-      - name: BitcoinAddress
+      - name: PivxAddress
         example: mkRLiFtiEzuqaC7hDUNMwTniMTUhq9xpK7
-      - name: amountBTC
+      - name: amountPIVX
+        example: 0.1
+      - name: comment
+        default: ""
+      - name: commentTo
+        default: ""
+    result: TxId
+
+  SendToAddressIX:
+    text: |
+      Send an amount to a given address. The amount is interpreted as a
+      floating point number (real) and is rounded to the nearest 0.00000001
+    params:
+      - name: PivxAddress
+        example: mkRLiFtiEzuqaC7hDUNMwTniMTUhq9xpK7
+      - name: amount
         example: 0.1
       - name: comment
         default: ""
@@ -554,7 +594,7 @@ methods:
 
   SetTxFee:
     text: |
-      Set the transaction fee, BTC per kB, nearest 0.00000001
+      Set the transaction fee, PIVX per kB, nearest 0.00000001
       Returns true if successful
     params:
       - name: feeRate
@@ -564,10 +604,32 @@ methods:
   SignMessage:
     text: Sign a message with the private key of an address
     params:
-      - name: BitcoinAddress
+      - name: PivxAddress
         text: The bitcoin address to use for the private key.
         example: mjUq15ga1EwCXJUHs2QiYhhrxTansS3Rc7
       - name: message
         text: The message to create a signature of
         example: Hello world!
     result: Base64
+
+  WalletLock:
+    text: |
+      Removes the wallet encryption key from memory, locking the wallet.
+    params:
+      - name: feeRate
+        example: 0.00001
+
+  WalletPassphrase:
+    text: |
+      Stores the wallet decryption key in memory for 'timeout' seconds.
+    params:
+      - name: passphrase
+      - name: timeout
+      - name: anonymizeonly
+
+  WalletPassphraseChange:
+    text: |
+      Changes the wallet passphrase from 'oldpassphrase' to 'newpassphrase'.
+    params:
+      - name: oldpassphrase
+      - name: newpassphrase

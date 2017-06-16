@@ -6,7 +6,7 @@ text: Methods for generating blocks in regression test (regtest) mode
 
 methods:
   GetGenerate:
-    text: Whether (true) or not (false) Bitcoin Core is currently mining
+    text: Whether (true) or not (false) Pivx is currently mining
     result: Boolean
 
   GetHashesPerSec:

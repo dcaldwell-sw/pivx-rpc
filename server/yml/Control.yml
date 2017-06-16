@@ -39,3 +39,7 @@ methods:
         default: null
         text: name of the method or omit for a list of all methods and brief usage
     result: String
+
+  Stop:
+    text: Stops the Daemon
+    result: String

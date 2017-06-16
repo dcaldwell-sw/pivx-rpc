@@ -136,6 +136,19 @@ methods:
         example: 10000
     result: Boolean
 
+  ReserveBalance:
+    text: Set reserve amount not participating in network protection.
+    params:
+      - name: reserve
+        text: Is true or false to turn balance reserve on or off
+        example: true
+      - name: amount
+        text: |
+          Is a real and rounded to cent.
+          If no parameters provided current setting is printed.
+        example: 99999999
+    result: None
+
   SubmitBlock:
     text: Attempts to submit new block to network.
     params:
