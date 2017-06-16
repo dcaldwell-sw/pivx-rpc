@@ -1,7 +1,7 @@
 {
   "name": "pivx-rpc",
   "description": "An RPC Client for Pivx Node",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "lib/index.js",
   "author": {
     "name": "Agustin Kassis",
